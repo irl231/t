@@ -1535,6 +1535,13 @@ package
                         cmd = null;
                         this.game.world.reloadCurrentMap();
                         break;
+                    case "debug":
+                        cmd = null;
+                        if (this.game.world.myAvatar.isStaff())
+                        {
+                            Config.debugToggle();
+                        };
+                        break;
                     case "stats":
                         cmd = null;
                         for (key in this.game.world.myAvatar.dataLeaf.sta)
@@ -1786,9 +1793,12 @@ package
                         cmd = null;
                         this.game.world.gotoHouse(((params[1] == null) ? this.game.network.myUserName : params.slice(1).join(" ")));
                         break;
-                    case "fly":
-                        cmd = null;
-                        this.game.world.flyToggle();
+                    case "flylove":
+                        if (this.game.world.myAvatar.isStaff())
+                        {
+                            cmd = null;
+                            this.game.world.flyToggle();
+                        };
                         break;
                     case "kick":
                     case "unmute":
@@ -2392,7 +2402,6 @@ package
                 {
                     if (usernameElement.toLowerCase() == this.game.network.myUserName.toLowerCase())
                     {
-                        trace(usernameElement.toLowerCase(), this.game.network.myUserName.toLowerCase(), (usernameElement.toLowerCase() == this.game.network.myUserName.toLowerCase()));
                         if (isReceivingElement == 0)
                         {
                             this.html2Fields((((((((timestampContent + fontColorStart) + this.chn[channelElement].col) + '">From ') + userPrefix) + messageElement) + fontColorClose) + "</font><br>"), "+=", channelElement, sixthElement);
@@ -3130,17 +3139,6 @@ package
                     this.formatMsgEntry("");
                     this.updateMsgEntry();
                     break;
-                case "trade":
-                    if (((!([2, 3, 4, 5].indexOf(this.mode) == -1)) && (!(this.game.ui.mcInterface.chatLog.btnTrade == null))))
-                    {
-                        this.game.ui.mcInterface.chatLog.btnTrade.dispatchEvent(new MouseEvent(MouseEvent.CLICK));
-                    };
-                    this.chn.cur = this.chn.trade;
-                    this.chn.lastPublic = this.chn.trade;
-                    this.game.ui.mcInterface.te.text = remainder.substr(6);
-                    this.formatMsgEntry("");
-                    this.updateMsgEntry();
-                    break;
                 case "world":
                     if (((!([2, 4, 5, 6].indexOf(this.mode) == -1)) && (!(this.game.ui.mcInterface.chatLog.btnWorld == null))))
                     {
@@ -3148,18 +3146,6 @@ package
                     };
                     this.chn.cur = this.chn.world;
                     this.chn.lastPublic = this.chn.world;
-                    this.game.ui.mcInterface.te.text = remainder.substr(6);
-                    this.formatMsgEntry("");
-                    this.updateMsgEntry();
-                    break;
-                case "cross":
-                case "crosschat":
-                    if (((!([2, 4, 5, 6].indexOf(this.mode) == -1)) && (!(this.game.ui.mcInterface.chatLog.btnWorld == null))))
-                    {
-                        this.game.ui.mcInterface.chatLog.btnWorld.dispatchEvent(new MouseEvent(MouseEvent.CLICK));
-                    };
-                    this.chn.cur = this.chn.crosschat;
-                    this.chn.lastPublic = this.chn.crosschat;
                     this.game.ui.mcInterface.te.text = remainder.substr(6);
                     this.formatMsgEntry("");
                     this.updateMsgEntry();
@@ -3440,6 +3426,6 @@ package
     }
 }//package 
 
-// _SafeStr_1 = "goto" (String#9324)
+// _SafeStr_1 = "goto" (String#9350)
 
 

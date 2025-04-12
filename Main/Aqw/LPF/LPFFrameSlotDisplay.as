@@ -35,7 +35,19 @@ package Main.Aqw.LPF
 
         private function fDraw():void
         {
-            this.ti.htmlText = ((this.isBank) ? (((((("<font color='#FFFFFF'>" + this.rootClass.world.bankController.iBankCount) + "</font><font color='#CCCCCC'> / </font>") + "<font color='#FFFFFF'>") + fData.avatar.objData.iBankSlots) + " </font><font color='#CCCCCC'>Bank Spaces</font>")) : (((((("<font color='#FFFFFF'>" + fData.list.length) + "</font><font color='#CCCCCC'> / </font>") + "<font color='#FFFFFF'>") + fData.iBagSlots) + " </font><font color='#CCCCCC'>Backpack Spaces</font>")));
+            if (this.isBank)
+            {
+                if (fData.avatar.objData.iBankDays >= 0)
+                {
+                    this.ti.htmlText = (((("<font color='#FFFFFF'>" + ((fData.avatar.objData.iBankDays < 1) ? 0 : fData.avatar.objData.iBankDays)) + " </font><font color='#CCCCCC'>Bank Days</font> - <font color='#FFFFFF'>") + this.rootClass.world.bankController.iBankCount) + "</font> <font color='#CCCCCC'>Bank Items</font>");
+                }
+                else
+                {
+                    this.ti.htmlText = "<b><font color='#ff0000'>Expired</font></b>";
+                };
+                return;
+            };
+            this.ti.htmlText = ((((("<font color='#FFFFFF'>" + fData.list.length) + "</font><font color='#CCCCCC'> / </font>") + "<font color='#FFFFFF'>") + fData.iBagSlots) + " </font><font color='#CCCCCC'>Backpack Spaces</font>");
         }
 
 

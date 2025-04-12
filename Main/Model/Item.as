@@ -43,6 +43,7 @@ package Main.Model
         public var sReqQuests:String;
         public var sType:String;
         public var effects:String = "";
+        public var effects_inventory:String = "";
         public var iEnhLvl:int = -1;
         public var PatternID:int = -1;
         public var EnhID:int = -1;
@@ -80,7 +81,7 @@ package Main.Model
         public var auctionCoins:int;
         public var Quantity:int;
         public var bSold:Boolean = false;
-        public var color:Object = new Object();
+        public var color:Object = {};
         public var iHue:int = 0;
         public var iBrightness:int = 0;
         public var iContrast:int = 0;
@@ -88,7 +89,7 @@ package Main.Model
         public var iReset:int = 0;
         public var TradeID:int;
         public var iType:int;
-        public var iRate:int;
+        public var iRate:Number;
         public var c:*;
         private var _rarity:String;
 
@@ -96,6 +97,10 @@ package Main.Model
         {
             var itemObj:Object;
             super(obj);
+            if (obj == null)
+            {
+                return;
+            };
             for each (itemObj in obj.turnin)
             {
                 this.turnin.push(new Item(itemObj));
@@ -148,6 +153,7 @@ package Main.Model
                     break;
                 case "serveruse":
                 case "clientuse":
+                case "boost":
                     icon = (((this.sFile.length > 0) && (!(Game.root.world.getClass(this.sFile) == null))) ? this.sFile : this.sIcon);
                     break;
                 default:

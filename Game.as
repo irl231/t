@@ -2073,7 +2073,7 @@ package
         {
             var _type:String = ((item.sType != null) ? item.sType : "Unknown");
             var _typeLower:String = _type.toLowerCase();
-            if (((_typeLower == "clientuse") || (_typeLower == "serveruse")))
+            if ((((_typeLower == "clientuse") || (_typeLower == "serveruse")) || (_typeLower == "boost")))
             {
                 return ("Item");
             };
@@ -2897,17 +2897,17 @@ package
             return (_local14);
         }
 
-        public function tryEnhance(_arg1:Object, _arg2:Object, _arg3:Boolean=false):void
+        public function tryEnhance(item1:Item, item2:Item, _arg3:Boolean=false):void
         {
-            if (((!(_arg1 == null)) && (!(_arg2 == null))))
+            if (((!(item1 == null)) && (!(item2 == null))))
             {
-                if (_arg2.iLvl > this.world.myAvatar.objData.intLevel)
+                if (item2.iLvl > this.world.myAvatar.objData.intLevel)
                 {
                     this.MsgBox.notify("Level requirement not met!");
                 }
                 else
                 {
-                    if (_arg1.EnhID == _arg2.ItemID)
+                    if (item1.EnhID == item2.ItemID)
                     {
                         this.MsgBox.notify("Selected Enhancement already applied to item!");
                     }
@@ -2915,11 +2915,11 @@ package
                     {
                         if (_arg3)
                         {
-                            this.world.sendEnhItemRequestShop(_arg1, _arg2);
+                            this.world.sendEnhItemRequestShop(item1, item2);
                         }
                         else
                         {
-                            this.world.sendEnhItemRequestLocal(_arg1, _arg2);
+                            this.world.sendEnhItemRequestLocal(item1, item2);
                         };
                     };
                 };
@@ -5514,6 +5514,8 @@ package
             this.ui.mcUpdates.uproto.mouseEnabled = false;
             this.ui.mcUpdates.uproto.visible = false;
             this.ui.mcUpdates.uproto.y = -400;
+            this.ui.mcUpdates.mouseEnabled = false;
+            this.ui.mcUpdates.mouseChildren = false;
             this.hideMCPVPQueue();
             stage.removeEventListener(KeyboardEvent.KEY_UP, this.key_actBar);
             stage.removeEventListener(KeyboardEvent.KEY_DOWN, this.key_StageLogin);

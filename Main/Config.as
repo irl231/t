@@ -58,10 +58,24 @@ package Main
         public static const serverPlayerImageURL:String = (serverApiURL + "image/avatar/player/chat/");
         public static const serverMainImageURL:String = (serverBaseURL + "api/image/assets/");
         public static const serverMapImageURL:String = (serverBaseURL + "api/image/assets/map/big/original/");
-        public static const isDebug:Boolean = false;
-        public static const isDebugNetwork:Boolean = false;
+        public static var isDebug:Boolean = false;
+        public static var isDebugNetwork:Boolean = false;
         public static var Data:Object = null;
 
+
+        public static function debugToggle():void
+        {
+            Config.isDebug = (!(Config.isDebug));
+            Config.isDebugNetwork = (!(Config.isDebugNetwork));
+            if (Config.isDebug)
+            {
+                Game.root.chatF.pushMsg("warning", "Debug ON", "SERVER", "", 0);
+            }
+            else
+            {
+                Game.root.chatF.pushMsg("warning", "Debug OFF", "SERVER", "", 0);
+            };
+        }
 
         public static function getMap(key:String):Object
         {

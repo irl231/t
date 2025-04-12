@@ -11,6 +11,8 @@ package
     import flash.events.*;
     import flash.media.*;
     import Main.Avatar.*;
+    import Main.Controller.*;
+    import Main.*;
 
     public class Apop extends MovieClip 
     {
@@ -23,268 +25,148 @@ package
         public var objSettings:Object = null;
         public var nMask:MovieClip;
         public var placement:MovieClip;
-        private var mc:MovieClip;
 
         public function Apop():void
         {
             addFrameScript(5, this.frame6);
-            this.mc = MovieClip(this);
-            this.mc.btnClose.addEventListener(MouseEvent.CLICK, this.xClick, false, 0, true);
+            this.btnClose.addEventListener(MouseEvent.CLICK, this.xClick, false, 0, true);
         }
 
-        public function update(_arg1:Object, data:Object):void
+        public function update(data:Object, settings:Object):void
         {
-            var _npcLinkage:String;
-            var cls:Class;
+            this.o = data;
+            this.objSettings = settings;
+            var npcLinkage:String = ((this.o.npcLinkage) || ("none"));
+            var npcEntry:String = ((this.o.npcEntry) || ("none"));
+            var scene:String = ((this.o.scene) || ("none"));
+            var cnt:String = ((this.o.cnt) || ("none"));
+            var frame:String = ((this.o.frame) || ("none"));
+            this.updateNPC(npcLinkage, npcEntry, settings);
+            this.updateContent(cnt, scene);
+            this.updateFrame(frame);
+            if (this.currentLabel == "init")
+            {
+                this.gotoAndPlay("in");
+            };
+        }
+
+        private function updateNPC(npcLinkage:String, npcEntry:String, settings:Object):void
+        {
             var npcRight:MovieClip;
             var npcLeft:MovieClip;
             var avatarMC:AvatarMC;
-            var _local10:Class;
-            var _local11:*;
-            var _local12:MovieClip;
-            var _local13:Boolean;
-            var _local14:int;
-            this.o = _arg1;
-            this.objSettings = data;
-            _npcLinkage = "none";
-            var _npcEntry:String = "none";
-            var _scene:String = "none";
-            var _cnt:String = "none";
-            var _frmae:String = "none";
-            if (("npcLinkage" in this.o))
+            if (npcLinkage == "none")
             {
-                _npcLinkage = this.o.npcLinkage;
+                this.npc.npcRight.visible = false;
+                this.npc.npcLeft.visible = false;
+                return;
             };
-            if (("npcEntry" in this.o))
+            var cls:Class = this.rootClass.world.getClass(npcLinkage);
+            if (cls)
             {
-                _npcEntry = this.o.npcEntry;
-            };
-            if (("cnt" in this.o))
-            {
-                _cnt = this.o.cnt;
-            };
-            if (("scene" in this.o))
-            {
-                _scene = this.o.scene;
-            };
-            if (("frame" in this.o))
-            {
-                _frmae = this.o.frame;
-            };
-            if (_npcLinkage != "none")
-            {
-                cls = (this.rootClass.world.getClass(_npcLinkage) as Class);
-                if (cls != null)
+                npcRight = ((npcEntry == "right") ? this.npc.npcRight : this.npc.npcLeft);
+                npcLeft = ((npcEntry == "right") ? this.npc.npcLeft : this.npc.npcRight);
+                if (npcLeft.currentLabel != "init")
                 {
-                    if (_npcEntry == "right")
+                    npcLeft.gotoAndPlay("slide-out");
+                }
+                else
+                {
+                    npcLeft.visible = false;
+                };
+                npcRight.visible = true;
+                npcRight.npc.removeChildAt(0);
+                if (npcLinkage == "AvatarMC")
+                {
+                    avatarMC = AvatarUtil.createAvatar("npc_apop", npcRight.npc, settings);
+                    if (settings.scaleApop !== undefined)
                     {
-                        npcRight = this.mc.npc.npcRight;
-                        npcLeft = this.mc.npc.npcLeft;
-                        if (npcLeft.currentLabel != "init")
-                        {
-                            npcLeft.gotoAndPlay("slide-out");
-                        }
-                        else
-                        {
-                            npcLeft.visible = false;
-                        };
+                        avatarMC.scale(settings.scaleApop);
                     }
                     else
                     {
-                        npcRight = this.mc.npc.npcLeft;
-                        npcLeft = this.mc.npc.npcRight;
-                        if (npcLeft.currentLabel != "init")
-                        {
-                            npcLeft.gotoAndPlay("slide-out");
-                        }
-                        else
-                        {
-                            npcLeft.visible = false;
-                        };
-                    };
-                    npcRight.visible = true;
-                    npcRight.npc.removeChildAt(0);
-                    if (_npcLinkage == "AvatarMC")
-                    {
-                        avatarMC = AvatarUtil.createAvatar("npc_apop", npcRight.npc, data);
                         avatarMC.scale(5);
+                    };
+                    if (settings.xApop !== undefined)
+                    {
+                        avatarMC.x = settings.xApop;
+                    }
+                    else
+                    {
                         avatarMC.x = -100;
+                    };
+                    if (settings.yApop !== undefined)
+                    {
+                        avatarMC.y = settings.yApop;
+                    }
+                    else
+                    {
                         avatarMC.y = ((this.npc.height >> 1) - 100);
-                        if (avatarMC.pAV.objData.eqp.en != null)
-                        {
-                            avatarMC.scaleX = (avatarMC.scaleY = 2.85);
-                        };
-                        avatarMC.disableAnimations();
-                    }
-                    else
-                    {
-                        npcRight.npc.addChild(new (cls)());
                     };
-                    if (npcRight.currentLabel != "init")
+                    if (avatarMC.pAV.objData.eqp.en)
                     {
-                        npcRight.gotoAndPlay("slide-hook");
-                    }
-                    else
+                        avatarMC.scaleX = (avatarMC.scaleY = 2.85);
+                    };
+                    avatarMC.disableAnimations();
+                    if (Config.isDebug)
                     {
-                        npcRight.gotoAndPlay("slide-in");
+                        avatarMC.addEventListener(MouseEvent.CLICK, function (mouseEvent:MouseEvent):void
+                        {
+                            trace("Double Click", name);
+                            var npcTool:mcNPCTool = mcNPCTool(UIController.show("npc_tool"));
+                            npcTool.target = avatarMC;
+                            npcTool.targetName.text = (avatarMC.pAV.objData.strUsername + " (APOP)");
+                            new Drag(avatarMC, avatarMC, npcTool.onPositionChange);
+                        }, false, 0, true);
                     };
                 }
                 else
                 {
-                    this.mc.npc.npcRight.visible = false;
-                    this.mc.npc.npcLeft.visible = false;
+                    npcRight.npc.addChild(new (cls)());
                 };
-            };
-            if (_cnt != "none")
-            {
-                _local10 = (this.rootClass.world.getClass(_cnt) as Class);
-                if (_local10 != null)
-                {
-                    this.mc.cnt.removeChildAt(0);
-                    _local11 = ((_cnt == "Plugins.ConfigurableNPC.CoreAPOP") ? this.mc.cnt.addChild(new _local10(data, this.rootClass)) : this.mc.cnt.addChild(new (_local10)()));
-                    _local11.name = "cnt";
-                    if (_scene != "none")
-                    {
-                        if (this.rootClass.checkForFrame(_local11, _scene))
-                        {
-                            _local11.gotoAndPlay(_scene);
-                        };
-                    };
-                };
-            };
-            if (_frmae != "none")
-            {
-                _local12 = MovieClip(this.mc.cnt.getChildByName("cnt"));
-                _local13 = false;
-                _local14 = 0;
-                while (_local14 < _local12.currentLabels.length)
-                {
-                    if (_local12.currentLabels[_local14].name == _frmae)
-                    {
-                        _local13 = true;
-                    };
-                    _local14++;
-                };
-                if (_local13)
-                {
-                    _local12.gotoAndPlay(_frmae);
-                }
-                else
-                {
-                    this.rootClass.addUpdate((("Label " + _frmae) + " not found!"));
-                };
-            };
-            if (this.mc.currentLabel == "init")
-            {
-                this.mc.gotoAndPlay("in");
+                npcRight.gotoAndPlay(((npcRight.currentLabel != "init") ? "slide-hook" : "slide-in"));
             };
         }
 
-        public function updateWithClasses(_arg1:Object, _arg2:Class, _arg3:Class):void
+        private function updateContent(cnt:String, scene:String):void
         {
-            var _local7:MovieClip;
-            var _local8:MovieClip;
-            var _local9:*;
-            var _local10:MovieClip;
-            var _local11:Boolean;
-            var _local12:int;
-            this.rootClass = Game(MovieClip(this.stage.getChildAt(0)));
-            this.o = _arg1;
-            var _local4:String = "none";
-            var _local5:String = "none";
-            var _local6:String = "none";
-            if (("npcEntry" in this.o))
+            var contentInstance:*;
+            if (cnt == "none")
             {
-                _local4 = this.o.npcEntry;
+                return;
             };
-            if (("scene" in this.o))
+            var cntClass:Class = (this.rootClass.world.getClass(cnt) as Class);
+            if (cntClass)
             {
-                _local5 = this.o.scene;
-            };
-            if (("frame" in this.o))
-            {
-                _local6 = this.o.frame;
-            };
-            if (_arg2 != null)
-            {
-                if (_local4 == "right")
+                this.cnt.removeChildAt(0);
+                contentInstance = ((cnt == "Plugins.ConfigurableNPC.CoreAPOP") ? new cntClass(this.objSettings, this.rootClass) : new (cntClass)());
+                this.cnt.addChild(contentInstance);
+                contentInstance.name = "cnt";
+                if (((!(scene == "none")) && (this.rootClass.checkForFrame(contentInstance, scene))))
                 {
-                    _local7 = this.mc.npc.npcRight;
-                    _local8 = this.mc.npc.npcLeft;
-                    if (_local8.currentLabel != "init")
-                    {
-                        _local8.gotoAndPlay("slide-out");
-                    }
-                    else
-                    {
-                        _local8.visible = false;
-                    };
-                }
-                else
-                {
-                    _local7 = this.mc.npc.npcLeft;
-                    _local8 = this.mc.npc.npcRight;
-                    if (_local8.currentLabel != "init")
-                    {
-                        _local8.gotoAndPlay("slide-out");
-                    }
-                    else
-                    {
-                        _local8.visible = false;
-                    };
+                    contentInstance.gotoAndPlay(scene);
                 };
-                _local7.visible = true;
-                _local7.npc.removeChildAt(0);
-                _local7.npc.addChild(new (_arg2)());
-                if (_local7.currentLabel != "init")
-                {
-                    _local7.gotoAndPlay("slide-hook");
-                }
-                else
-                {
-                    _local7.gotoAndPlay("slide-in");
-                };
+            };
+        }
+
+        private function updateFrame(frame:String):void
+        {
+            if (frame == "none")
+            {
+                return;
+            };
+            var cntInstance:MovieClip = MovieClip(this.cnt.getChildByName("cnt"));
+            var labelExists:Boolean = cntInstance.currentLabels.some(function (label:*, ... rest):Boolean
+            {
+                return (label.name == frame);
+            });
+            if (labelExists)
+            {
+                cntInstance.gotoAndPlay(frame);
             }
             else
             {
-                this.mc.npc.npcRight.visible = false;
-                this.mc.npc.npcLeft.visible = false;
-            };
-            if (_arg3 != null)
-            {
-                this.mc.cnt.removeChildAt(0);
-                _local9 = this.mc.cnt.addChild(new (_arg3)());
-                _local9.name = "cnt";
-                if (_local5 != "none")
-                {
-                    _local9.gotoAndPlay(_local5);
-                };
-            };
-            if (_local6 != "none")
-            {
-                _local10 = MovieClip(this.mc.cnt.getChildByName("cnt"));
-                _local11 = false;
-                _local12 = 0;
-                while (_local12 < _local10.currentLabels.length)
-                {
-                    if (_local10.currentLabels[_local12].name == _local6)
-                    {
-                        _local11 = true;
-                    };
-                    _local12++;
-                };
-                if (_local11)
-                {
-                    _local10.gotoAndPlay(_local6);
-                }
-                else
-                {
-                    this.rootClass.addUpdate((("Label " + _local6) + " not found!"));
-                };
-            };
-            if (this.mc.currentLabel == "init")
-            {
-                this.mc.gotoAndPlay("in");
+                this.rootClass.addUpdate((("Label " + frame) + " not found!"));
             };
         }
 
@@ -294,11 +176,11 @@ package
             {
                 this.rootClass.world.closeAPOP(this.objSettings.NpcMapID);
             };
-            var _local1:MovieClip = MovieClip(this.mc.cnt.getChildByName("cnt"));
-            _local1.soundTransform = new SoundTransform(0);
-            _local1.stop();
-            this.mc.btnClose.removeEventListener(MouseEvent.CLICK, this.xClick);
-            this.mc.parent.removeChild(this);
+            var content:MovieClip = MovieClip(this.cnt.getChildByName("cnt"));
+            content.soundTransform = new SoundTransform(0);
+            content.stop();
+            this.btnClose.removeEventListener(MouseEvent.CLICK, this.xClick);
+            this.parent.removeChild(this);
         }
 
         public function exit():void
@@ -311,7 +193,7 @@ package
             stop();
         }
 
-        private function xClick(_arg1:MouseEvent):void
+        private function xClick(event:MouseEvent):void
         {
             this.fClose();
         }

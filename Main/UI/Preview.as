@@ -171,7 +171,7 @@ package Main.UI
                         }
                         else
                         {
-                            if (((this.item.sType.toLowerCase() == "serveruse") || (this.item.sType.toLowerCase() == "clientuse")))
+                            if ((((this.item.sType.toLowerCase() == "serveruse") || (this.item.sType.toLowerCase() == "clientuse")) || (this.item.sType.toLowerCase() == "boost")))
                             {
                                 this.loadBag(this.item);
                             };

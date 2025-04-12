@@ -103,7 +103,7 @@ package Main.Aqw.LPF
             o.fData = {};
             o.fData.avatar = fData.avatar;
             o.r = {
-                "x":96,
+                "x":65,
                 "y":-40,
                 "w":-1,
                 "h":24
@@ -140,7 +140,7 @@ package Main.Aqw.LPF
             o.fData = fData.objData;
             o.fData.list = fData.itemsI;
             o.r = {
-                "x":(32 + 581),
+                "x":(15 + 581),
                 "y":-40,
                 "w":-1,
                 "h":24

@@ -206,9 +206,57 @@ package Main.Aqw.LPF
             return (tabs);
         }
 
+        public function getTabStatesEnhancement(item:Object=null):Array
+        {
+            var tab:Object;
+            var tabs:Array = [{
+                "sTag":"Show All",
+                "icon":"iipack",
+                "state":-1,
+                "filter":"enhancement",
+                "mc":{}
+            }, {
+                "sTag":"Show only weapons",
+                "icon":"iwsword",
+                "state":-1,
+                "filter":"Weapon_enhancement",
+                "mc":{}
+            }, {
+                "sTag":"Show only armor",
+                "icon":"iiclass",
+                "state":-1,
+                "filter":"ar_enhancement",
+                "mc":{}
+            }, {
+                "sTag":"Show only helms",
+                "icon":"iihelm",
+                "state":-1,
+                "filter":"he_enhancement",
+                "mc":{}
+            }, {
+                "sTag":"Show only capes",
+                "icon":"iicape",
+                "state":-1,
+                "filter":"ba_enhancement",
+                "mc":{}
+            }];
+            if (item != null)
+            {
+                for each (tab in tabs)
+                {
+                    if (tab.filter == (item.sES + "_enhancement"))
+                    {
+                        return ([tab]);
+                    };
+                };
+                return ([tabs[0]]);
+            };
+            return (tabs);
+        }
+
         public function getSortOrder():Array
         {
-            return (["Sword", "Axe", "Gauntlet", "Dagger", "HandGun", "Rifle", "Gun", "Whip", "Bow", "Mace", "Polearm", "Staff", "Wand", "Class", "Armor", "Entity", "Helm", "Cape", "Misc", "Earring", "Ring", "Amulet", "Belt", "Pet", "House", "Wall Item", "Floor Item", "Enhancement", "Note", "Resource", "Item", "Quest Item", "ServerUse"]);
+            return (["Sword", "Axe", "Gauntlet", "Dagger", "HandGun", "Rifle", "Gun", "Whip", "Bow", "Mace", "Polearm", "Staff", "Wand", "Class", "Armor", "Entity", "Helm", "Cape", "Misc", "Earring", "Ring", "Amulet", "Belt", "Pet", "House", "Wall Item", "Floor Item", "Enhancement", "Boost", "Note", "Resource", "Item", "Quest Item", "ServerUse"]);
         }
 
         public function getFilterMap():Object
@@ -220,8 +268,17 @@ package Main.Aqw.LPF
                 "ba":["Cape"],
                 "pe":["Pet"],
                 "am":["Misc", "Earring", "Amulet", "Necklace", "Belt", "Ring"],
-                "it":["Enhancement", "Note", "Resource", "Item", "Quest Item", "ServerUse", "House", "Wall Item", "Floor Item"],
-                "enh":["Enhancement"]
+                "it":["Enhancement", "Note", "Resource", "Item", "Quest Item", "ServerUse", "Boost", "House", "Wall Item", "Floor Item"],
+                "enh":["Enhancement"],
+                "enhancement":["Sword", "Axe", "Gauntlet", "Dagger", "HandGun", "Rifle", "Gun", "Whip", "Bow", "Mace", "Polearm", "Staff", "Wand", "Class", "Helm", "Cape"],
+                "Weapon_enhancement":["Sword", "Axe", "Gauntlet", "Dagger", "HandGun", "Rifle", "Gun", "Whip", "Bow", "Mace", "Polearm", "Staff", "Wand"],
+                "ar_enhancement":["Class"],
+                "he_enhancement":["Helm"],
+                "ba_enhancement":["Cape"],
+                "boost":["Sword", "Axe", "Gauntlet", "Dagger", "HandGun", "Rifle", "Gun", "Whip", "Bow", "Mace", "Polearm", "Staff", "Wand", "Class", "Helm", "Cape"],
+                "Weapon_boosted":["Sword", "Axe", "Gauntlet", "Dagger", "HandGun", "Rifle", "Gun", "Whip", "Bow", "Mace", "Polearm", "Staff", "Wand"],
+                "he_boosted":["Helm"],
+                "ba_boosted":["Cape"]
             });
         }
 

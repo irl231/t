@@ -153,7 +153,7 @@ package Main.Aqw.LPF
                         iSel = null;
                         this.aSel = o.fData.sType.toLowerCase();
                         this.bSel = "";
-                        if (this.aSel == "enhancement")
+                        if (((this.aSel == "enhancement") || (this.aSel == "boost")))
                         {
                             eSel = o.fData;
                         }
@@ -161,7 +161,41 @@ package Main.Aqw.LPF
                         {
                             iSel = o.fData;
                         };
-                        o.tabStates = ((o.fData.sType.toLowerCase() == "enhancement") ? getTabStates(o.fData) : getTabStates({"sES":"it"}));
+                        switch (o.fData.sType.toLowerCase())
+                        {
+                            case "enhancement":
+                                o.tabStates = getTabStatesEnhancement(o.fData);
+                                break;
+                            case "boost":
+                                o.tabStates = [{
+                                    "sTag":"Show All",
+                                    "icon":"iipack",
+                                    "state":-1,
+                                    "filter":"boosted",
+                                    "mc":{}
+                                }, {
+                                    "sTag":"Show only weapons",
+                                    "icon":"iwsword",
+                                    "state":-1,
+                                    "filter":"Weapon_boosted",
+                                    "mc":{}
+                                }, {
+                                    "sTag":"Show only helms",
+                                    "icon":"iihelm",
+                                    "state":-1,
+                                    "filter":"he_boosted",
+                                    "mc":{}
+                                }, {
+                                    "sTag":"Show only capes",
+                                    "icon":"iicape",
+                                    "state":-1,
+                                    "filter":"ba_boosted",
+                                    "mc":{}
+                                }];
+                                break;
+                            default:
+                                o.tabStates = getTabStates({"sES":"it"});
+                        };
                         o.fData = {
                             "iSel":iSel,
                             "eSel":eSel,
@@ -192,14 +226,14 @@ package Main.Aqw.LPF
                     {
                         p = this.rootClass.copyObj(o);
                         p.eventType = "listItemBSolo";
-                        p.fData = ((o.fData.sType.toLowerCase() == "enhancement") ? ({
+                        p.fData = (((o.fData.sType.toLowerCase() == "enhancement") || (o.fData.sType.toLowerCase() == "boost")) ? ({
 "iSel":null,
 "eSel":p.fData
 }) : ({
 "iSel":p.fData,
 "eSel":null
 }));
-                        if (this.bSel == "enhancement")
+                        if (((this.bSel == "enhancement") || (this.bSel == "boost")))
                         {
                             eSel = null;
                         }
@@ -211,7 +245,7 @@ package Main.Aqw.LPF
                             };
                         };
                         this.bSel = o.fData.sType.toLowerCase();
-                        if (this.bSel == "enhancement")
+                        if (((this.bSel == "enhancement") || (this.bSel == "boost")))
                         {
                             eSel = o.fData;
                         }
@@ -378,6 +412,19 @@ package Main.Aqw.LPF
                         cancelBroadcast = true;
                     };
                     break;
+                case "boostItem":
+                    if (!this.rootClass.isGreedyModalInStack())
+                    {
+                        if (((!(iSel == null)) && (!(eSel == null))))
+                        {
+                            this.rootClass.network.send("boostApply", [iSel.ItemID, eSel.ItemID]);
+                        };
+                    }
+                    else
+                    {
+                        cancelBroadcast = true;
+                    };
+                    break;
                 case "buyItem":
                     if (iSel != null)
                     {
@@ -505,9 +552,18 @@ package Main.Aqw.LPF
                     {
                         if (((!(iSel == null)) && (!(eSel == null))))
                         {
-                            dataO.fData.sText = "Enhance!";
-                            dataO.buttonNewEventType = "enhanceItem";
-                            dataO.sMode = "red";
+                            if (eSel.sType.toLowerCase() == "boost")
+                            {
+                                dataO.fData.sText = "Boost!";
+                                dataO.buttonNewEventType = "boostItem";
+                                dataO.sMode = "red";
+                            }
+                            else
+                            {
+                                dataO.fData.sText = "Enhance!";
+                                dataO.buttonNewEventType = "enhanceItem";
+                                dataO.sMode = "red";
+                            };
                             if (iSel.bEquip)
                             {
                                 dataP.fData.sText = "Unequip";
@@ -541,22 +597,19 @@ package Main.Aqw.LPF
                                     {
                                         dataO.fData.sText = "Enhance!";
                                         dataO.buttonNewEventType = "showItemListB";
-                                        if (Config.getBoolean("feature_wear"))
+                                        if ((((Config.getBoolean("feature_wear")) && (!(iSel.sES == "ar"))) && (((iSel.bUpg == 1) && (this.rootClass.world.myAvatar.isUpgraded())) || (iSel.bUpg == 0))))
                                         {
-                                            if ((((iSel.bUpg == 1) && (this.rootClass.world.myAvatar.isUpgraded())) || (iSel.bUpg == 0)))
+                                            if (iSel.bWear)
                                             {
-                                                if (iSel.bWear)
-                                                {
-                                                    dataO.sMode = "red";
-                                                    dataO.fData.sText = "Hide";
-                                                    dataO.buttonNewEventType = "hideItem";
-                                                }
-                                                else
-                                                {
-                                                    dataO.sMode = "red";
-                                                    dataO.fData.sText = "Show";
-                                                    dataO.buttonNewEventType = "showItem";
-                                                };
+                                                dataO.sMode = "red";
+                                                dataO.fData.sText = "Hide";
+                                                dataO.buttonNewEventType = "hideItem";
+                                            }
+                                            else
+                                            {
+                                                dataO.sMode = "red";
+                                                dataO.fData.sText = "Show";
+                                                dataO.buttonNewEventType = "showItem";
                                             };
                                         };
                                         if (iSel.EnhLvl == -1)
@@ -608,11 +661,19 @@ package Main.Aqw.LPF
                                                 dataP.buttonNewEventType = "equipItem";
                                             };
                                         };
-                                        if (((iSel.sType.toLowerCase() == "serveruse") || (iSel.sType.toLowerCase() == "clientuse")))
+                                        switch (iSel.sType.toLowerCase())
                                         {
-                                            dataP.sMode = "red";
-                                            dataP.fData.sText = "Use";
-                                            dataP.buttonNewEventType = "useItem";
+                                            case "serveruse":
+                                            case "clientuse":
+                                                dataP.sMode = "red";
+                                                dataP.fData.sText = "Use";
+                                                dataP.buttonNewEventType = "useItem";
+                                                break;
+                                            case "boost":
+                                                dataP.fData.sText = "Apply Now";
+                                                dataP.buttonNewEventType = "showItemListB";
+                                                dataP.sMode = "red";
+                                                break;
                                         };
                                     };
                                 };

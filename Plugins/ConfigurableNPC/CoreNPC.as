@@ -13,6 +13,8 @@ package Plugins.ConfigurableNPC
     import flash.display.*;
     import flash.events.*;
     import Main.Avatar.*;
+    import Main.Controller.*;
+    import Main.*;
 
     public class CoreNPC extends MovieClip 
     {
@@ -24,6 +26,7 @@ package Plugins.ConfigurableNPC
 
         public function CoreNPC(world:World, avatar:Avatar, characterData:Object, index:int)
         {
+            var avatarMC:AvatarMC;
             var button:DisplayObject;
             super();
             this.objSettings = characterData;
@@ -32,7 +35,7 @@ package Plugins.ConfigurableNPC
             {
                 return;
             };
-            var avatarMC:AvatarMC = AvatarUtil.buildAvatar("npc", world.CHARS, this.objAvatar, this.objSettings, this.objSettings.avatarMC);
+            avatarMC = AvatarUtil.buildAvatar("npc", world.CHARS, this.objAvatar, this.objSettings, this.objSettings.avatarMC);
             var i:int;
             while (i < avatarMC.numChildren)
             {
@@ -40,10 +43,13 @@ package Plugins.ConfigurableNPC
                 {
                     avatarMC.removeChildAt(i);
                 };
-                i++;
+                i = (i + 1);
             };
-            avatarMC.mcChar.mouseEnabled = false;
-            avatarMC.mcChar.mouseChildren = false;
+            if (!Config.isDebug)
+            {
+                avatarMC.mcChar.mouseEnabled = false;
+                avatarMC.mcChar.mouseChildren = false;
+            };
             button = avatarMC.addChildAt(new CoreNPCButton(), 8);
             button.y = avatarMC.bubble.y;
             button.x = (avatarMC.fx.x - 10);
@@ -53,7 +59,14 @@ package Plugins.ConfigurableNPC
             avatarMC.apopbutton = MovieClip(button);
             avatarMC.pname.ti.text = "";
             avatarMC.name = (characterData.strUsername + "_CORE_NPC");
-            avatarMC.scale(world.SCALE);
+            if (characterData.scale !== undefined)
+            {
+                avatarMC.scale((characterData.scale / 10));
+            }
+            else
+            {
+                avatarMC.scale(world.SCALE);
+            };
             avatarMC.turn(characterData.face.toLowerCase());
             avatarMC.disablePNameMouse();
             if (characterData.face.toLowerCase() == "right")
@@ -75,6 +88,25 @@ package Plugins.ConfigurableNPC
             else
             {
                 avatarMC.mcChar.gotoAndStop(((npcUoLeaf.intState) ? animation : "Dead"));
+            };
+            if (Config.isDebug)
+            {
+                avatarMC.addEventListener(MouseEvent.CLICK, function (mouseEvent:MouseEvent):void
+                {
+                    var npcTool:mcNPCTool = mcNPCTool(UIController.show("npc_tool"));
+                    npcTool.target = avatarMC;
+                    npcTool.targetName.text = (characterData.strUsername + " (NPC)");
+                    avatarMC.mouseEnabled = true;
+                    avatarMC.mouseChildren = true;
+                    avatarMC.mcChar.mouseEnabled = true;
+                    avatarMC.mcChar.mouseChildren = true;
+                    avatarMC.buttonMode = true;
+                    new Drag(avatarMC, avatarMC, npcTool.onPositionChange);
+                }, false, 0, true);
+                avatarMC.addEventListener(MouseEvent.MOUSE_DOWN, function (e:MouseEvent):void
+                {
+                    Game.root.chatF.pushMsg("game", "avatarMC MOUSE DOWN", "SERVER", "", 0);
+                });
             };
         }
 

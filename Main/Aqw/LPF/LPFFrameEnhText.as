@@ -301,10 +301,18 @@ package Main.Aqw.LPF
             var i2:int;
             var mcStatCopy:MovieClip;
             var _local6:int;
+            var dmgBoost:Number;
+            var dmgDecrease:Number;
+            var classBoost:Number;
+            var goldBoost:Number;
+            var repBoost:Number;
+            var xpBoost:Number;
             var effect:String;
+            var invEffect:String;
             var position:int;
             var boostType:String;
             var value:Number;
+            var invValue:Number;
             var boost:MovieClip;
             rootClass.onRemoveChildrens(this.mcStats);
             this.mcStats.visible = false;
@@ -397,7 +405,7 @@ package Main.Aqw.LPF
             {
                 this.mcStats.removeChild(this.mcStats.getChildByName("mcContainer"));
             };
-            if (((!(this.iSel == null)) && (!(this.iSel.effects == ""))))
+            if (((!(this.iSel == null)) && ((!(this.iSel.effects == "")) || (!(this.iSel.effects_inventory == "")))))
             {
                 this.boostsObj = {};
                 this.mcContainer = new MovieClip();
@@ -405,28 +413,71 @@ package Main.Aqw.LPF
                 this.mcContainer.x = 1;
                 this.mcContainer.y = 75;
                 addChild(this.mcContainer);
+                dmgBoost = 0;
+                dmgDecrease = 0;
+                classBoost = 0;
+                goldBoost = 0;
+                repBoost = 0;
+                xpBoost = 0;
                 for each (effect in this.iSel.effects.split(","))
                 {
                     value = Math.round((Number(effect.split(":")[1]) * 100));
                     switch (effect.split(":")[0].toLowerCase())
                     {
                         case "dmgall":
-                            this.boostsObj["dmgBoost"] = (("Damage increase " + value) + "%");
+                            dmgBoost = (dmgBoost + value);
+                            this.boostsObj["dmgBoost"] = "";
                             break;
                         case "dmgdecrease":
-                            this.boostsObj["dmgDecrease"] = (("Damage reduction " + value) + "%");
+                            dmgDecrease = (dmgDecrease + value);
+                            this.boostsObj["dmgDecrease"] = "";
                             break;
                         case "cp":
-                            this.boostsObj["classBoost"] = (("Class Point " + value) + "%");
+                            classBoost = (classBoost + value);
+                            this.boostsObj["classBoost"] = "";
                             break;
                         case "gold":
-                            this.boostsObj["goldBoost"] = (("Coins " + value) + "%");
+                            goldBoost = (goldBoost + value);
+                            this.boostsObj["goldBoost"] = "";
                             break;
                         case "rep":
-                            this.boostsObj["repBoost"] = (("Reputation " + value) + "%");
+                            repBoost = (repBoost + value);
+                            this.boostsObj["repBoost"] = "";
                             break;
                         case "exp":
-                            this.boostsObj["xpBoost"] = (("Experience " + value) + "%");
+                            xpBoost = (xpBoost + value);
+                            this.boostsObj["xpBoost"] = "";
+                            break;
+                    };
+                };
+                for each (invEffect in this.iSel.effects_inventory.split(","))
+                {
+                    invValue = Math.round((Number(invEffect.split(":")[1]) * 100));
+                    switch (invEffect.split(":")[0].toLowerCase())
+                    {
+                        case "dmgall":
+                            dmgBoost = (dmgBoost + invValue);
+                            this.boostsObj["dmgBoost"] = "";
+                            break;
+                        case "dmgdecrease":
+                            dmgDecrease = (dmgDecrease + invValue);
+                            this.boostsObj["dmgDecrease"] = "";
+                            break;
+                        case "cp":
+                            classBoost = (classBoost + invValue);
+                            this.boostsObj["classBoost"] = "";
+                            break;
+                        case "gold":
+                            goldBoost = (goldBoost + invValue);
+                            this.boostsObj["goldBoost"] = "";
+                            break;
+                        case "rep":
+                            repBoost = (repBoost + invValue);
+                            this.boostsObj["repBoost"] = "";
+                            break;
+                        case "exp":
+                            xpBoost = (xpBoost + invValue);
+                            this.boostsObj["xpBoost"] = "";
                             break;
                     };
                 };
@@ -437,21 +488,27 @@ package Main.Aqw.LPF
                     {
                         case "dmgBoost":
                             boost = new BoostDamageIncrease();
+                            this.boostsObj["dmgBoost"] = (("Damage increase " + dmgBoost) + "%");
                             break;
                         case "dmgDecrease":
                             boost = new BoostDamageDecrease();
+                            this.boostsObj["dmgDecrease"] = (("Damage reduction " + dmgDecrease) + "%");
                             break;
                         case "classBoost":
                             boost = new BoostClassPoint();
+                            this.boostsObj["classBoost"] = (("Class Point " + classBoost) + "%");
                             break;
                         case "goldBoost":
                             boost = new BoostCoins();
+                            this.boostsObj["goldBoost"] = (("Coins " + goldBoost) + "%");
                             break;
                         case "repBoost":
                             boost = new BoostReputation();
+                            this.boostsObj["repBoost"] = (("Reputation " + repBoost) + "%");
                             break;
                         case "xpBoost":
                             boost = new BoostExperience();
+                            this.boostsObj["xpBoost"] = (("Experience " + xpBoost) + "%");
                             break;
                     };
                     boost.width = 25;

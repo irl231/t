@@ -6,6 +6,7 @@
 package Main
 {
     import Main.Aqw.LPF.LPFLayoutInvShopEnh;
+    import Main.Stats.StatsPanel;
     import Main.Aqw.LPF.LPFLayoutAuction;
     import Main.Aqw.LPF.LPFLayoutBank;
     import Main.Aqw.LPF.LPFLayoutTrade;
@@ -15,7 +16,6 @@ package Main
     import Main.Model.Item;
     import Main.Model.ShopModel;
     import flash.events.Event;
-    import Main.Stats.StatsPanel;
     import Main.UI.AbstractDropFrame;
     import Main.Model.Skill;
     import fl.motion.Color;
@@ -89,6 +89,11 @@ package Main
                 return;
             };
             lpfLayoutInvShopEnh.update({"eventType":"refreshItems"});
+            var statsPanel:StatsPanel = StatsPanel(UIController.getByName("stats_panel"));
+            if (statsPanel)
+            {
+                statsPanel.updateBoosts();
+            };
         }
 
         private static function marketRefresh():void
@@ -286,6 +291,9 @@ package Main
                     break;
                 case "increaseVip":
                     this.increaseVip(data);
+                    break;
+                case "increaseBank":
+                    this.increaseBank(data);
                     break;
                 case "changeColor":
                     this.changeColor(data);
@@ -879,6 +887,9 @@ package Main
                     break;
                 case "buyLoadoutSlots":
                     this.buyLoadoutSlots(data);
+                    break;
+                case "boostApply":
+                    this.boostApply(data);
                     break;
                 default:
                     trace("[Requests] Unhandled CMD", data.cmd);
@@ -1840,6 +1851,22 @@ package Main
             MainController.modal((((((("You have upgraded <b>" + iSel.sName) + "</b> with <b>") + data.EnhName) + "</b>, level <b>") + data.EnhLvl) + "</b>!"), null, {}, "white,medium", "mono");
         }
 
+        private function boostApply(data:Object):void
+        {
+            var itemTarget:Item = this.game.world.myAvatar.getItemByID(data.ItemID);
+            itemTarget.effects_inventory = data.effects_inventory;
+            this.game.world.invTree[itemTarget.ItemID] = itemTarget;
+            this.game.mixer.playSound("Good");
+            if (this.game.ui.mcPopup.currentLabel == "Inventory")
+            {
+                LPFLayoutInvShopEnh(this.game.ui.mcPopup.getChildByName("mcInventory")).update({
+                    "eventType":"refreshItems",
+                    "sInstruction":"previewEquipOnly"
+                });
+            };
+            MainController.modal((((("You have boosted <b>" + itemTarget.sName) + "</b> with <b>") + data.itemBoostName) + "</b>!"), null, {}, "white,medium", "mono");
+        }
+
         private function who(data:Object):void
         {
             this.game.ui.mcOFrame.fOpenWith({
@@ -2235,6 +2262,11 @@ package Main
         private function increaseVip(data:Object):void
         {
             this.game.world.myAvatar.objData.iUpgDays = data.days;
+        }
+
+        private function increaseBank(data:Object):void
+        {
+            this.game.world.myAvatar.objData.iBankDays = data.days;
         }
 
         private function changeColor(data:Object):void
@@ -2862,7 +2894,6 @@ package Main
 
         private function unwearItem(data:Object):void
         {
-            var statsPanel:StatsPanel;
             var avatar:Avatar = this.game.world.getAvatarByUserID(data.uid);
             if (avatar != null)
             {
@@ -2889,11 +2920,6 @@ package Main
                 {
                     avatar.unwearItem(data.ItemID);
                     inventoryRefresh();
-                    statsPanel = StatsPanel(UIController.getByName("stats_panel"));
-                    if (statsPanel)
-                    {
-                        statsPanel.updateBoosts();
-                    };
                 };
             };
         }
@@ -3001,7 +3027,6 @@ package Main
 
         private function unequipItem(data:Object):void
         {
-            var statsPanel:StatsPanel;
             var avatar:Avatar = this.game.world.getAvatarByUserID(data.uid);
             if (avatar != null)
             {
@@ -3014,11 +3039,6 @@ package Main
                 {
                     avatar.unequipItem(data.ItemID);
                     inventoryRefresh();
-                    statsPanel = StatsPanel(UIController.getByName("stats_panel"));
-                    if (statsPanel)
-                    {
-                        statsPanel.updateBoosts();
-                    };
                 };
             };
         }

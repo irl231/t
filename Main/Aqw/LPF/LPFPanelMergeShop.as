@@ -149,7 +149,7 @@ package Main.Aqw.LPF
             o.fData = fData.objData;
             o.fData.list = fData.itemsInv;
             o.r = {
-                "x":(32 + 581),
+                "x":(15 + 581),
                 "y":-40,
                 "w":-1,
                 "h":24

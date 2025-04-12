@@ -322,7 +322,7 @@ package
             var displayCount:int;
             for each (Menu in aList)
             {
-                mcMenu = mList.addChild(new CoreButton(Menu.sName, Menu.sNameColor, Menu.sSubtitle, Menu.sSubtitleColor, Menu.sAction, Menu.sValue));
+                mcMenu = mList.addChild(new CoreButton(Menu.sName, Menu.sNameColor, Menu.sSubtitle, Menu.sSubtitleColor, Menu.sAction, Menu.sValue, "", 0, 0));
                 if ((((displayCount % 3) == 0) && (!(displayCount == 0))))
                 {
                     nextY = (nextY + (mcMenu.height + 5));

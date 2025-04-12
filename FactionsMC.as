@@ -110,7 +110,6 @@ package
         {
             var faction:*;
             var proto:fProto;
-            var factionButton:LibraryButton;
             var factionLength:int = this.factions.length;
             var i:int;
             while (i < factionLength)
@@ -123,16 +122,10 @@ package
                     proto.t1.x = 18;
                     proto.tRank.htmlText = ("Rank " + faction.iRank);
                     proto.t2.htmlText = ((faction.iRank >= 10) ? "0<font color='#FF0000'>/</font>0" : ((faction.iRep + " <font color='#FF0000'>/</font> ") + Rank.getPointsFromRank((faction.iRank + 1))));
-                    factionButton = LibraryButton(proto.addChild(new LibraryButton()));
-                    factionButton.FactionID = faction.FactionID;
-                    factionButton.scaleX = (factionButton.scaleY = 0.7);
-                    factionButton.y = 2.5;
-                    factionButton.addEventListener(MouseEvent.CLICK, onLibraryClick);
                     proto.addEventListener(MouseEvent.MOUSE_OVER, iMouseOver, false, 0, true);
                     proto.addEventListener(MouseEvent.MOUSE_OUT, iMouseOut, false, 0, true);
                     proto.hit.alpha = 0;
                     proto.y = (i * 20);
-                    proto.x = 10;
                 };
                 i++;
             };
@@ -157,7 +150,8 @@ package
 
         private function showEmptyList():void
         {
-            var proto:fProto = fProto(this.cnt.fList.addChild(new fProto()));
+            var proto:fProto;
+            proto = fProto(this.cnt.fList.addChild(new fProto()));
             proto.t1.htmlText = '<font color="#DDDDDD">No Factions!</font>';
             proto.t2.visible = false;
             proto.tRank.visible = false;

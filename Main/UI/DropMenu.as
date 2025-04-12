@@ -192,7 +192,7 @@ package Main.UI
                         }
                         else
                         {
-                            if (((this.itemSelected.sType.toLowerCase() == "serveruse") || (this.itemSelected.sType.toLowerCase() == "clientuse")))
+                            if ((((this.itemSelected.sType.toLowerCase() == "serveruse") || (this.itemSelected.sType.toLowerCase() == "clientuse")) || (this.itemSelected.sType.toLowerCase() == "boost")))
                             {
                                 this.loadBag();
                             };

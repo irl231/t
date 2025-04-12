@@ -198,7 +198,9 @@ package Main.Stats
             var key:String;
             var effectValue:Number;
             var effect:String;
+            var invEffect:String;
             var value:Number;
+            var invValue:Number;
             var boost:MovieClip;
             while (this.bContainer.numChildren > 1)
             {
@@ -214,7 +216,7 @@ package Main.Stats
             var repBoost:Number = 0;
             var xpBoost:Number = 0;
             this.boostsObj = {};
-            var title:* = this.game.world.myAvatar.objData.title;
+            var title:Object = this.game.world.myAvatar.objData.title;
             if (((!(title == null)) && (!(title.Effect == null))))
             {
                 for (key in title.Effect)
@@ -287,6 +289,37 @@ package Main.Stats
                                 break;
                             case "exp":
                                 xpBoost = (xpBoost + value);
+                                this.boostsObj["xpBoost"] = "";
+                                break;
+                        };
+                    };
+                    for each (invEffect in item.effects_inventory.split(","))
+                    {
+                        invValue = Math.round((Number(invEffect.split(":")[1]) * 100));
+                        switch (invEffect.split(":")[0].toLowerCase())
+                        {
+                            case "dmgall":
+                                dmgBoost = (dmgBoost + invValue);
+                                this.boostsObj["dmgBoost"] = "";
+                                break;
+                            case "dmgdecrease":
+                                dmgDecrease = (dmgDecrease + invValue);
+                                this.boostsObj["dmgDecrease"] = "";
+                                break;
+                            case "cp":
+                                classBoost = (classBoost + invValue);
+                                this.boostsObj["classBoost"] = "";
+                                break;
+                            case "gold":
+                                goldBoost = (goldBoost + invValue);
+                                this.boostsObj["goldBoost"] = "";
+                                break;
+                            case "rep":
+                                repBoost = (repBoost + invValue);
+                                this.boostsObj["repBoost"] = "";
+                                break;
+                            case "exp":
+                                xpBoost = (xpBoost + invValue);
                                 this.boostsObj["xpBoost"] = "";
                                 break;
                         };

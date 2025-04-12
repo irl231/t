@@ -458,6 +458,7 @@ package Main.Aqw.LPF
         {
             var item:Item;
             var i:int;
+            var item3:Item;
             var item2:Item;
             this.listA = [];
             var items:Vector.<Item> = new Vector.<Item>();
@@ -483,11 +484,24 @@ package Main.Aqw.LPF
             }
             else
             {
-                for each (item2 in fData.list)
+                if (((this.tSel.filter == "boosted") || (this.tSel.filter == "enhancement")))
                 {
-                    if (this.filterMap[this.tSel.filter].indexOf(item2.sType) > -1)
+                    for each (item3 in fData.list)
                     {
-                        items.push(item2);
+                        if (((["Weapon", "he", "ar", "ba"].indexOf(item3.sES) > -1) && (!(item3.sType == "Enhancement"))))
+                        {
+                            items.push(item3);
+                        };
+                    };
+                }
+                else
+                {
+                    for each (item2 in fData.list)
+                    {
+                        if (this.filterMap[this.tSel.filter].indexOf(item2.sType) > -1)
+                        {
+                            items.push(item2);
+                        };
                     };
                 };
             };
@@ -668,6 +682,7 @@ package Main.Aqw.LPF
             {
                 item = fData.iSel;
             };
+            var isBoost:Boolean = ((item.sType == "Boost") || (item.sType == "Enhancement"));
             if (item != null)
             {
                 i = 0;
@@ -677,7 +692,7 @@ package Main.Aqw.LPF
                     if ((displayObject is LPFElementListItemItem))
                     {
                         lpfElementListItemItem = LPFElementListItemItem(displayObject);
-                        if (((lpfElementListItemItem.fData[this.filter] == item[this.filter]) && (!(lpfElementListItemItem.fData.sType == item.sType))))
+                        if (((isBoost) && (["Weapon", "he", "ar", "ba"].indexOf(lpfElementListItemItem.fData.sES) > -1)))
                         {
                             lpfElementListItemItem.alpha = 1;
                             lpfElementListItemItem.mouseEnabled = true;
@@ -685,9 +700,18 @@ package Main.Aqw.LPF
                         }
                         else
                         {
-                            lpfElementListItemItem.alpha = 0.3;
-                            lpfElementListItemItem.mouseEnabled = false;
-                            lpfElementListItemItem.mouseChildren = false;
+                            if (((lpfElementListItemItem.fData[this.filter] == item[this.filter]) && (!(lpfElementListItemItem.fData.sType == item.sType))))
+                            {
+                                lpfElementListItemItem.alpha = 1;
+                                lpfElementListItemItem.mouseEnabled = true;
+                                lpfElementListItemItem.mouseChildren = true;
+                            }
+                            else
+                            {
+                                lpfElementListItemItem.alpha = 0.3;
+                                lpfElementListItemItem.mouseEnabled = false;
+                                lpfElementListItemItem.mouseChildren = false;
+                            };
                         };
                     };
                     i++;

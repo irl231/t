@@ -157,6 +157,7 @@ package
                     Game.configureScroll(this.notificationDisplay, this.notificationMask, this.notificationScroll);
                     this.handlerButtonInit(this.notificationDisplay.mcSelfAuras, "hideSelfAuras");
                     this.handlerButtonInit(this.notificationDisplay.mcTargetAuras, "hideTargetAuras");
+                    this.handlerButtonInit(this.notificationDisplay.mcHideAuras, "hideAuras");
                     this.notificationDisplay.mcParty.txtMiddle.text = ((Boolean(this.game.uoPref.bParty)) ? "OFF" : "ON");
                     this.notificationDisplay.mcFriend.txtMiddle.text = ((Boolean(this.game.uoPref.bFriend)) ? "OFF" : "ON");
                     this.notificationDisplay.mcDuel.txtMiddle.text = ((Boolean(this.game.uoPref.bDuel)) ? "OFF" : "ON");
@@ -423,6 +424,9 @@ package
                             game.targetAuras = new TargetAuras();
                         };
                     });
+                    return;
+                case "mcHideAuras":
+                    this.handlerButtonClick(this.notificationDisplay.mcHideAuras, "hideAuras");
                     return;
                 case "mcParty":
                     this.notificationDisplay.mcParty.txtMiddle.text = ((this.notificationDisplay.mcParty.txtMiddle.text == "ON") ? "OFF" : "ON");

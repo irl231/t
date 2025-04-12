@@ -8,7 +8,6 @@ package Main.Emoji
     import flash.display.MovieClip;
     import flash.utils.Dictionary;
     import flash.text.TextField;
-    import flash.events.IOErrorEvent;
     import flash.display.DisplayObject;
     import flash.display.Sprite;
     import flash.geom.Point;
@@ -49,10 +48,7 @@ package Main.Emoji
                 (callback(null));
                 return (true);
             };
-            LoadController.singleton.addLoadEmoji(emoji.File, "emoji", callback, function (_arg1:IOErrorEvent):*
-            {
-                trace(_arg1);
-            });
+            LoadController.singleton.addLoadEmoji(emoji.File, "emoji", callback);
             return (false);
         }
 

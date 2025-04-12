@@ -6,6 +6,7 @@
 package 
 {
     import flash.display.MovieClip;
+    import flash.display.SimpleButton;
     import __AS3__.vec.Vector;
     import Main.Model.Item;
     import flash.events.MouseEvent;
@@ -22,6 +23,7 @@ package
         public var chkGold:MovieClip;
         public var chkFree:MovieClip;
         public var chkAC:MovieClip;
+        public var buyTicket:SimpleButton;
 
         public function BankFilter(mc:Game)
         {
@@ -37,6 +39,7 @@ package
             this.chkFree.addEventListener(MouseEvent.CLICK, this.onChkChange, false, 0, true);
             this.chkRarity.addEventListener(MouseEvent.CLICK, this.onChkChange, false, 0, true);
             this.btnFilter.addEventListener(MouseEvent.CLICK, this.onBtnFilter, false, 0, true);
+            this.buyTicket.addEventListener(MouseEvent.CLICK, this.onBuyTicket, false, 0, true);
         }
 
         public function onFilter(bank:*, index:int, arr:Vector.<Item>):Boolean
@@ -143,6 +146,11 @@ package
                 "sMode":"bank",
                 "refreshTabs":true
             });
+        }
+
+        public function onBuyTicket(e:MouseEvent):void
+        {
+            this.rootClass.world.sendLoadShopRequest(5);
         }
 
 

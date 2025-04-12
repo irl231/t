@@ -201,7 +201,7 @@ package
                     {
                         showReq = (showReq + ",<br>");
                     };
-                    showReq = (showReq + ((item1.iQty < itemTurnQuantity) ? ((((item1.sName + ' <font color="#888888">') + item1.iQty) + "/</font>") + itemTurnQuantity) : (((((('<font color="#888888">' + item1.sName) + " ") + item1.iQty) + "/") + itemTurnQuantity) + "</font>")));
+                    showReq = (showReq + ((item1.iQty < itemTurnQuantity) ? (((((((('<a target="_blank" href="' + Config.serverWikiItemURL) + item1.ItemID) + '">') + item1.sName) + '</a> <font color="#888888">') + item1.iQty) + "/</font>") + itemTurnQuantity) : ((((((((('<font color="#888888"><a target="_blank" href="' + Config.serverWikiItemURL) + item1.ItemID) + '">') + item1.sName) + "</a> ") + item1.iQty) + "/") + itemTurnQuantity) + "</font>")));
                     count++;
                 };
                 core.strReq.htmlText = showReq;
@@ -290,11 +290,18 @@ package
                             dropFrameMC.btnEye.addEventListener(MouseEvent.CLICK, onPreviewClick, false, 0, true);
                             dropFrameMC.ItemData = item;
                             dropFrameMC.ItemID = item.ItemID;
-                            dropFrameMC.strRate.text = ((item.iType == 2) ? (item.iRate + "%") : "");
+                            dropFrameMC.strRate.text = "";
                             dropFrameMC.strName.autoSize = "left";
                             dropFrameMC.strName.htmlText = item.sName;
                             dropFrameMC.strName.width = (dropFrameMC.strName.textWidth + 6);
-                            dropFrameMC.strType.htmlText = item.sType;
+                            if (((item.iType == 2) || (item.iType == 4)))
+                            {
+                                dropFrameMC.strType.htmlText = (((item.sType + " (") + item.iRate) + "%)");
+                            }
+                            else
+                            {
+                                dropFrameMC.strType.htmlText = item.sType;
+                            };
                             dropFrameMC.bg.width = (dropFrameMC.strName.textWidth + 75);
                             if (dropFrameMC.bg.width < 175)
                             {

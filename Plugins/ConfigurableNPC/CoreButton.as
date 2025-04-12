@@ -12,6 +12,7 @@ package Plugins.ConfigurableNPC
     import flash.display.*;
     import flash.events.*;
     import flash.text.*;
+    import flash.filters.*;
     import flash.net.*;
 
     public class CoreButton extends MovieClip 
@@ -28,8 +29,10 @@ package Plugins.ConfigurableNPC
         private var sAction:String;
         private var sValue:*;
         private var sIcon:String;
+        private var iQSindex:int;
+        private var iQSvalue:int;
 
-        public function CoreButton(sName:String="", sNameColor:String="", sSubtitle:String="", sSubtitleColor:String="", sAction:String="", sValue:*=null, sIcon:String="")
+        public function CoreButton(sName:String="", sNameColor:String="", sSubtitle:String="", sSubtitleColor:String="", sAction:String="", sValue:String="", sIcon:String="", iQSindex:int=0, iQSvalue:int=0)
         {
             this.Name = sName;
             this.NameColor = sNameColor;
@@ -37,6 +40,12 @@ package Plugins.ConfigurableNPC
             this.SubtitleColor = sSubtitleColor;
             this.Action = sAction;
             this.Value = sValue;
+            this.iQSindex = iQSindex;
+            this.iQSvalue = iQSvalue;
+            if (((iQSindex >= 0) && (Game.root.world.getQuestValue(iQSindex) < int(iQSvalue))))
+            {
+                this.btnButton.filters = [new ColorMatrixFilter([0.2989, 0.587, 0.114, 0, 0, 0.2989, 0.587, 0.114, 0, 0, 0.2989, 0.587, 0.114, 0, 0, 0, 0, 0, 1, 0])];
+            };
         }
 
         public function get Name():String
@@ -114,6 +123,11 @@ package Plugins.ConfigurableNPC
             var join:Array;
             var frame:String;
             var pad:String;
+            if (((this.iQSindex >= 0) && (Game.root.world.getQuestValue(this.iQSindex) < int(this.iQSvalue))))
+            {
+                this.rootClass.MsgBox.notify("Button Locked: Quest Requirement not met.");
+                return;
+            };
             switch (this.Action)
             {
                 case "Shop":

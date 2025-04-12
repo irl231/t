@@ -172,7 +172,7 @@ package Main.Chronicle
 
         private function onComplete(event:Event):void
         {
-            this.sortedChronicles = ChroniclePanel.sortData(JSON.parse(event.target.data));
+            this.sortedChronicles = JSON.parse(event.target.data);
             this.onBuild(this.sortedChronicles);
         }
 

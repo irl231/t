@@ -1436,6 +1436,7 @@ package
 
         public function scale(scale:Number):void
         {
+            trace(scale);
             var charScale:Number = ((this.pAV.dataLeaf.isAdopted) ? (scale * 0.85) : scale);
             this.mcChar.scaleX = ((this.mcChar.scaleX >= 0) ? charScale : -(charScale));
             this.mcChar.scaleY = charScale;

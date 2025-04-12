@@ -122,7 +122,7 @@ package Plugins.ConfigurableNPC
             {
                 if (((!(action.isStaffOnly)) || ((action.isStaffOnly) && (this.rootClass.world.myAvatar.isStaff()))))
                 {
-                    button = new CoreButton(action.Name, action.NameColor, action.Subtitle, action.SubtitleColor, action.Action, action.Value, action.Icon);
+                    button = new CoreButton(action.Name, action.NameColor, action.Subtitle, action.SubtitleColor, action.Action, action.Value, action.Icon, action.iQSindex, action.iQSvalue);
                     mcButtonList.addChild(button);
                     button.name = "btnButton";
                     if (mcButtonList == this.mcButtonListHorizontal)
@@ -141,7 +141,7 @@ package Plugins.ConfigurableNPC
                 i = 0;
                 while (i < mcButtonList.numChildren)
                 {
-                    btn = (mcButtonList.getChildAt(i) as CoreButton);
+                    btn = CoreButton(mcButtonList.getChildAt(i));
                     if (btn)
                     {
                         btn.x = (startX + padding);
@@ -163,7 +163,7 @@ package Plugins.ConfigurableNPC
                 j = 0;
                 while (j < mcButtonList.numChildren)
                 {
-                    btnVertical = (mcButtonList.getChildAt(j) as CoreButton);
+                    btnVertical = CoreButton(mcButtonList.getChildAt(j));
                     if (btnVertical)
                     {
                         btnVertical.x = startX;

@@ -1121,7 +1121,7 @@ package
             var displayCount:int;
             for each (attribute in data.attributes)
             {
-                mcMenu = this.listTech.addChild(new CoreButton(attribute.Name, "FFFFFF", ("Level " + attribute.ProgressLevel), "FF9933", "ShowAttribute", attribute));
+                mcMenu = this.listTech.addChild(new CoreButton(attribute.Name, "FFFFFF", ("Level " + attribute.ProgressLevel), "FF9933", "ShowAttribute", attribute, "", 0, 0));
                 if ((((displayCount % 2) == 0) && (!(displayCount == 0))))
                 {
                     nextY = 20;

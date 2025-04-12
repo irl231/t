@@ -1457,23 +1457,17 @@ package
             this.gotoTown(_arg1, _arg2, _arg3);
         }
 
-        public function openApop(_arg1:*, _arg2:*=null):*
+        public function openApop(apopData:Object, settings:Object=null):void
         {
-            var _local2:MovieClip;
-            if (this.myAvatar == null)
+            if (((this.myAvatar == null) || (this.myAvatar.objData == null)))
             {
                 return;
             };
-            if (this.myAvatar.objData == null)
-            {
-                return;
-            };
-            if ((((this.isMovieFront("Apop")) || (!("frame" in _arg1))) || (("frame" in _arg1) && ("cnt" in _arg1))))
+            if ((((this.isMovieFront("Apop")) || (!("frame" in apopData))) || (("frame" in apopData) && ("cnt" in apopData))))
             {
                 this.removeMovieFront();
                 this.rootClass.gameMenu.close();
-                _local2 = this.attachMovieFront("Apop");
-                _local2.update(_arg1, _arg2);
+                this.attachMovieFront("Apop").update(apopData, settings);
             };
         }
 
@@ -5641,7 +5635,7 @@ package
                         while (i < data.auras.length)
                         {
                             aura = data.auras[i];
-                            aura.cLeaf = Game.root.copyObj(dataLeaf);
+                            aura.cLeaf = dataLeaf;
                             aura.passive = (data.cmd == "aura+p");
                             if (aura.passive)
                             {
@@ -5654,15 +5648,17 @@ package
                             };
                             if (((((targetAvatar == this.myAvatar) || (targetAvatar == this.myAvatar.target)) || ((!(dataLeaf.targets == null)) && (!(dataLeaf.targets[this.rootClass.network.myUserId] == null)))) || (data.cmd == "aura++")))
                             {
-                                actionDamage = new auraDisplay();
-                                actionDamage.visible = (!(data.isHidden));
-                                actionDamage.t.ti.text = (aura.nam + "!");
-                                targetAvatar.pMC.addChild(actionDamage);
-                                actionDamage.x = ((targetAvatar.pMC.mcChar.scaleX < 0) ? 35 : (-(actionDamage.t.ti.textWidth) - 35));
-                                actionDamage.y = ((targetAvatar.pMC.pname.y + 25) + ((actionDamage.height + 3) * i));
-                                if (Game.root.userPreference.data.enableRenderCombatTextAsBitmap)
+                                if (((!(Game.root.userPreference.data.hideAuras)) && (!(aura.isHidden))))
                                 {
-                                    Game.spriteToBitmap(actionDamage.t);
+                                    actionDamage = new auraDisplay();
+                                    actionDamage.t.ti.text = (aura.nam + "!");
+                                    targetAvatar.pMC.addChild(actionDamage);
+                                    actionDamage.x = ((targetAvatar.pMC.mcChar.scaleX < 0) ? 35 : (-(actionDamage.t.ti.textWidth) - 35));
+                                    actionDamage.y = ((targetAvatar.pMC.pname.y + 25) + ((actionDamage.height + 3) * i));
+                                    if (Game.root.userPreference.data.enableRenderCombatTextAsBitmap)
+                                    {
+                                        Game.spriteToBitmap(actionDamage.t);
+                                    };
                                 };
                                 if (aura.fx != null)
                                 {
@@ -5720,10 +5716,9 @@ package
                             aura = auras[i];
                             if (this.removeAura(aura, dataLeaf, AbstractAvatarMC(targetAvatar.pMC)))
                             {
-                                if (((((targetAvatar == this.myAvatar) || (targetAvatar == this.myAvatar.target)) || ((!(dataLeaf.targets == null)) && (!(dataLeaf.targets[this.rootClass.network.myUserId] == null)))) || (data.cmd == "aura--")))
+                                if ((((!(Game.root.userPreference.data.hideAuras)) && (!(aura.isHidden))) && ((((targetAvatar == this.myAvatar) || (targetAvatar == this.myAvatar.target)) || ((!(dataLeaf.targets == null)) && (!(dataLeaf.targets[this.rootClass.network.myUserId] == null)))) || (data.cmd == "aura--"))))
                                 {
                                     actionDamage = new auraDisplay();
-                                    actionDamage.visible = (!(data.isHidden));
                                     actionDamage.t.ti.text = (("*" + aura.nam) + " fades*");
                                     actionDamage.t.ti.textColor = 0x999999;
                                     if (Game.root.userPreference.data.enableRenderCombatTextAsBitmap)
@@ -5758,15 +5753,18 @@ package
                         };
                         return;
                     case "aura*":
-                        actionDamage = new auraDisplay();
-                        actionDamage.t.ti.text = "* IMMUNE *";
-                        actionDamage.t.ti.textColor = 16724273;
-                        targetAvatar.pMC.addChild(actionDamage);
-                        actionDamage.x = ((targetAvatar.pMC.mcChar.scaleX < 0) ? 35 : (-(actionDamage.t.ti.textWidth) - 35));
-                        actionDamage.y = ((targetAvatar.pMC.pname.y + 25) + ((actionDamage.height + 3) * i));
-                        if (Game.root.userPreference.data.enableRenderCombatTextAsBitmap)
+                        if (((!(Game.root.userPreference.data.hideAuras)) && (!(aura.isHidden))))
                         {
-                            Game.spriteToBitmap(actionDamage.t);
+                            actionDamage = new auraDisplay();
+                            actionDamage.t.ti.text = "* IMMUNE *";
+                            actionDamage.t.ti.textColor = 16724273;
+                            targetAvatar.pMC.addChild(actionDamage);
+                            actionDamage.x = ((targetAvatar.pMC.mcChar.scaleX < 0) ? 35 : (-(actionDamage.t.ti.textWidth) - 35));
+                            actionDamage.y = ((targetAvatar.pMC.pname.y + 25) + ((actionDamage.height + 3) * i));
+                            if (Game.root.userPreference.data.enableRenderCombatTextAsBitmap)
+                            {
+                                Game.spriteToBitmap(actionDamage.t);
+                            };
                         };
                         break;
                 };
@@ -5924,8 +5922,7 @@ package
                 };
                 if (aura != null)
                 {
-                    trace("REMOVED");
-                    this.removeAura(aura, dataLeaf, targetAvatar.pMC);
+                    this.removeAura(aura, dataLeaf, AbstractAvatarMC(targetAvatar.pMC));
                 };
             };
         }
@@ -7216,30 +7213,22 @@ package
             };
         }
 
-        public function attachMovieFront(_arg1:*):MovieClip
+        public function attachMovieFront(clsName:String):MovieClip
         {
-            var _local2:MovieClip;
-            var _local3:Class;
-            var _local4:*;
-            var _local5:*;
-            _local3 = (this.getClass(_arg1) as Class);
-            _local4 = true;
-            if (this.FG.numChildren)
+            var movieClass:Class;
+            var movieInstance:MovieClip;
+            movieClass = this.getClass(clsName);
+            if (this.FG.numChildren > 0)
             {
-                _local2 = MovieClip(this.FG.getChildAt(0));
-                _local5 = (_local2.constructor as Class);
-                if (_local5 == _local3)
+                movieInstance = MovieClip(this.FG.getChildAt(0));
+                if (movieInstance.constructor === movieClass)
                 {
-                    _local4 = false;
+                    return (movieInstance);
                 };
             };
-            if (_local4)
-            {
-                this.removeMovieFront();
-                _local2 = MovieClip(this.FG.addChild(new (_local3)()));
-                this.FG.mouseChildren = true;
-            };
-            return (_local2);
+            this.removeMovieFront();
+            this.FG.mouseChildren = true;
+            return (MovieClip(this.FG.addChild(new (movieClass)())));
         }
 
         public function attachMovieFrontMenu(_arg1:*):MovieClip
@@ -8620,7 +8609,6 @@ package
                 };
             };
             MainController.modal("Would you like to rebuild this frame in Map Builder?", this.rebuildMap, {"mapBuild":mapBuild}, null, "dual", true);
-            trace(JSON.stringify(mapBuild));
         }
 
         public function rebuildMap(data:Object):void
@@ -8730,6 +8718,6 @@ package
     }
 }//package 
 
-// _SafeStr_1 = "goto" (String#9324)
+// _SafeStr_1 = "goto" (String#9350)
 
 

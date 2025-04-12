@@ -70,8 +70,6 @@ package Main.Avatar.Auras
         {
             var aura:Object;
             var avatarAuras:Object;
-            var iconToRemove:ib2;
-            var multiIconToRemove:ib2;
             switch (auraData.cmd)
             {
                 case "aura+":
@@ -108,26 +106,9 @@ package Main.Avatar.Auras
                     return;
                 case "aura-":
                 case "aura--":
-                    if (auraData.aura)
+                    for each (aura in auraData.auras)
                     {
-                        aura = auraData.aura;
-                        if (((this.icons) && (this.icons.hasOwnProperty(aura.nam))))
-                        {
-                            iconToRemove = this.icons[aura.nam];
-                            this.removeCountDown(iconToRemove);
-                        };
-                    };
-                    if (auraData.auras)
-                    {
-                        for each (aura in auraData.auras)
-                        {
-                            delete this.aurasStack[aura.nam];
-                            if (((this.icons) && (this.icons.hasOwnProperty(aura.nam))))
-                            {
-                                multiIconToRemove = this.icons[aura.nam];
-                                this.removeCountDown(multiIconToRemove);
-                            };
-                        };
+                        delete this.aurasStack[aura.nam];
                     };
                     return;
                 case "aura*":

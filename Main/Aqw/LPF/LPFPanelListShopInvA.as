@@ -51,7 +51,7 @@ package Main.Aqw.LPF
                 "frame":new LPFFrameSlotDisplay(),
                 "fData":fData.objData,
                 "r":{
-                    "x":32,
+                    "x":15,
                     "y":-40,
                     "w":-1,
                     "h":24
